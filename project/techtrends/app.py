@@ -4,12 +4,23 @@ from flask import Flask, jsonify, json, render_template, request, url_for, redir
 from werkzeug.exceptions import abort
 import logging
 
+connection_counter = 0
+
 # Function to get a database connection.	
 # This function connects to database with the name `database.db`
 def get_db_connection():
     connection = sqlite3.connect('database.db')
     connection.row_factory = sqlite3.Row
+    global connection_counter
+    connection_counter += 1
     return connection
+
+# Function to count posts in db
+def get_post_count():
+    connection = get_db_connection()
+    post = connection.execute('SELECT COUNT(*) FROM posts').fetchone()[0]
+    connection.close()
+    return post
 
 # Function to get a post using its ID
 def get_post(post_id):
@@ -72,7 +83,7 @@ def create():
 @app.route('/healthz')
 def healthcheck():
     response = app.response_class(
-            response=json.dumps({"result":"OK - Healthy"}),
+            response=json.dumps({"result":"OK - healthy"}),
             status=200,
             mimetype='application/json'
     )
@@ -82,8 +93,9 @@ def healthcheck():
 
 @app.route('/metrics')
 def metrics():
+    global connection_counter
     response = app.response_class(
-            response=json.dumps({'db_connection_count':1,'post_count':7}),
+            response=json.dumps({'db_connection_count':connection_counter,'post_count: %s':get_post_count()}),
             status=200,
             mimetype='application/json'
     )
@@ -94,5 +106,7 @@ def metrics():
 # start the application on port 3111
 if __name__ == "__main__":
     ## stream logs to a STDOUT with time in format
-    logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG)
+    logging.basicConfig(format='%(levelname)s %(asctime)s %(message)s', level=logging.DEBUG)
     app.run(host='0.0.0.0', port='3111')
+
+#format='%(levelname)s %(asctime)s %(message)s'
