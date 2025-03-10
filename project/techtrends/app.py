@@ -6,7 +6,7 @@ from werkzeug.exceptions import abort
 @app.route('/healthz')
 def healthcheck():
     response = app.response_class(
-            response=json.dumps({"result":"OK - healthy"}),
+            response=json.dumps({"result":"OK - Healthy"}),
             status=200,
             mimetype='application/json'
     )
