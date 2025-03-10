@@ -2,27 +2,7 @@ import sqlite3
 
 from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
 from werkzeug.exceptions import abort
-
-@app.route('/healthz')
-def healthcheck():
-    response = app.response_class(
-            response=json.dumps({"result":"OK - Healthy"}),
-            status=200,
-            mimetype='application/json'
-    )
-    app.logger.info('Status request successfull')
-    app.logger.debug('DEBUG message')
-    return response
-
-@app.route('/metrics')
-def metrics():
-    response = app.response_class(
-            response=json.dumps({'db_connection_count':1,'post_count':7}),
-            status=200,
-            mimetype='application/json'
-    )
-    app.logger.info('Metrics request successfull')
-    return response
+import logging
 
 # Function to get a database connection.	
 # This function connects to database with the name `database.db`
@@ -66,7 +46,7 @@ def post(post_id):
 # Define the About Us page
 @app.route('/about')
 def about():
-    app.logger.info('Abot Us page retrieved')
+    app.logger.info('About Us page retrieved')
     return render_template('about.html')
 
 # Define the post creation functionality 
@@ -89,9 +69,30 @@ def create():
 
     return render_template('create.html')
 
+@app.route('/healthz')
+def healthcheck():
+    response = app.response_class(
+            response=json.dumps({"result":"OK - Healthy"}),
+            status=200,
+            mimetype='application/json'
+    )
+    app.logger.info('Status request successfull')
+    app.logger.debug('DEBUG message')
+    return response
+
+@app.route('/metrics')
+def metrics():
+    response = app.response_class(
+            response=json.dumps({'db_connection_count':1,'post_count':7}),
+            status=200,
+            mimetype='application/json'
+    )
+    app.logger.info('Metrics request successfull')
+    return response
+
+
 # start the application on port 3111
 if __name__ == "__main__":
-    ## stream logs to a file
-    FORMAT = '%(asctime)s %(clientip)-15s %(user)-8s %(message)s'
-    logging.basicConfig(format=FORMAT, level=logging.DEBUG)
+    ## stream logs to a STDOUT with time in format
+    logging.basicConfig(format='%(asctime)s %(message)s', level=logging.DEBUG)
     app.run(host='0.0.0.0', port='3111')
