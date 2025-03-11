@@ -1,5 +1,4 @@
 import sqlite3
-
 from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
 from werkzeug.exceptions import abort
 import logging
@@ -108,5 +107,3 @@ if __name__ == "__main__":
     ## stream logs to a STDOUT with time in format
     logging.basicConfig(format='%(levelname)s %(asctime)s %(message)s', level=logging.DEBUG)
     app.run(host='0.0.0.0', port='3111')
-
-#format='%(levelname)s %(asctime)s %(message)s'
