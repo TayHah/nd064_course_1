@@ -86,7 +86,7 @@ def healthcheck():
             status=200,
             mimetype='application/json'
     )
-    app.logger.info('Status request successfull')
+    app.logger.info('healthz request successfull')
     app.logger.debug('DEBUG message')
     return response
 
