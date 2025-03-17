@@ -74,5 +74,5 @@ spec:
         ## more than the specified CPU and memory values. In this example, 
         ## the pod will not surpass 128 Mebibytes and 500 miliCPUs.
           limits:
-            memory: {{ .Values.limits.requests.memory }} 
-            cpu: {{ .Values.limits.requests.cpu }} 
+            memory: {{ .Values.resources.limits.memory }} 
+            cpu: {{ .Values.resources.limits.cpu }} 
